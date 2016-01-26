@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 	"fmt"
-	"github.com/Pendoragon/code/go/sni"
+	"github.com/Pendoragon/code/go/sni/sni"
 )
 
 func main() {
