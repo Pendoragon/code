@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: rattler
+  name: rattler
+spec:
+  replicas: 2
+  selector:
+    name: rattler
+  template:
+    metadata:
+      labels:
+        name: rattler
+    spec:
+      containers:
+      - name: rattler
+        image: tupachydralisk/rattler:v0.0.1
+        imagePullPolicy: Always
