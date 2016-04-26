@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: echo-test
+  labels:
+    k8s-app: test
+spec:
+  containers:
+  - name: echo
+    image: busybox
+    command:
+    - echo
+    - "done!"
+  - name: echo-tail
+    image: busybox
+    command:
+    - tail
+    - -f
+    - "/dev/null"
+  - name: echo-sleep
+    image: busybox
+    command:
+    - sleep
+    - "20"
+  restartPolicy: Never
