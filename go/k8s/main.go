@@ -21,9 +21,9 @@ func main() {
 		glog.Fatalf("Failed to make client: %v", err)
 	}
 
-	var test_service *k8s_api.Service
+	test_service := &k8s_api.Service{}
 	// var test_pod *k8s_api.Pod
-
+	test_service.Labels = make(map[string]string)
 	test_service.Labels["name"] = "test"
 	test_service.Name = "test"
 	test_service.Spec.Selector = make(map[string]string)
