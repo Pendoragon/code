@@ -41,8 +41,17 @@ func main() {
 	}
 
 	s, err := newSupervisor(c, 5 * time.Second, k8s_api.NamespaceAll)
+	go s.podController.Run(s.stopCh)
 	for {
-		s.podLister.Store.List()
+		if !s.podController.HasSynced() {
+			glog.Warning("Controller not synced yet!")
+		}
+		pods := s.podLister.Store.List()
+		glog.Infof("List get %v pods", len(pods))
+		for _, obj := range pods {
+			pod := obj.(*k8s_api.Pod)
+			glog.Infof("Get Pod: %v/%v", pod.Namespace, pod.Name)
+		}
 		time.Sleep(3 * time.Second)
 	}
 }
