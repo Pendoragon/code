@@ -4,7 +4,7 @@
 
 // +build !plan9
 
-package fsnotify_test
+package main
 
 import (
 	"log"
@@ -12,7 +12,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
-func ExampleNewWatcher() {
+func main() {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
