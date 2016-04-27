@@ -17,3 +17,13 @@ spec:
       - name: fsnotify
         image: index.caicloud.io/caicloud/fsnotify
         imagePullPolicy: "Always"
+        volumeMounts:
+          - name: config-volume
+            mountPath: /tmp/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: kubeconfig
+            items:
+            - key: some-file.txt
+              path: foo
