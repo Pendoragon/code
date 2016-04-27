@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM index.caicloud.io/caicloud/debian:jessie
 
 RUN mkdir /app
 WORKDIR /app
