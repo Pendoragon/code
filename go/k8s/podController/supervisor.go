@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"time"
+	"reflect"
 
 	"github.com/golang/glog"
 
@@ -18,29 +19,43 @@ type supervisor struct {
 	client         *k8s_client.Client
 	podController  *framework.Controller
 	podLister      cache.StoreToPodLister
+	podManager     *PodManager
 
 	stopCh   chan struct{}
+
 }
 
-func newSupervisor(kubeClient *k8s_client.Client, resyncPeriod time.Duration, namespace string) (*supervisor, error){
+func NewSupervisor(kubeClient *k8s_client.Client, resyncPeriod time.Duration, namespace string) (*supervisor, error){
 	c := supervisor{
 		client: kubeClient,
 		stopCh: make(chan struct{}),
+		podManager: NewPodManager(kubeClient, 1),
 	}
 
 	// event handler to just print out all the new events.
 	podEventHandler := framework.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			addPod := obj.(*k8s_api.Pod)
-			glog.Info(fmt.Sprintf("ADD %s/%s", addPod.Namespace, addPod.Name))
+			if addPod.Labels["name"] == "test-pod" {
+				glog.Info(fmt.Sprintf("ADD %s/%s", addPod.Namespace, addPod.Name))
+				glog.Info(fmt.Sprintf("- Pod in status %s", addPod.Status))
+			}
 		},
 		DeleteFunc: func(obj interface{}) {
 			delPod := obj.(*k8s_api.Pod)
-			glog.Info(fmt.Sprintf("DELETE %s/%s", delPod.Namespace, delPod.Name))
+			if delPod.Labels["name"] == "test-pod" {
+				glog.Info(fmt.Sprintf("DELETE %s/%s", delPod.Namespace, delPod.Name))
+				glog.Info(fmt.Sprintf("- Pod in status %s", delPod.Status))
+			}
 		},
 		UpdateFunc: func(old, cur interface{}) {
-			upPod := cur.(*k8s_api.Pod)
-			glog.Info(fmt.Sprintf("UPDATE %s/%s", upPod.Namespace, upPod.Name))
+			if !reflect.DeepEqual(old, cur) {
+				upPod := cur.(*k8s_api.Pod)
+				if upPod.Labels["name"] == "test-pod" {
+					glog.Info(fmt.Sprintf("UPDATE %s/%s", upPod.Namespace, upPod.Name))
+					glog.Info(fmt.Sprintf("- Pod in status %s", upPod.Status))
+				}
+			}
 		},
 	}
 
@@ -66,6 +81,9 @@ func podListFunc(c *k8s_client.Client, ns string) func(k8s_api.ListOptions) (run
 	}
 }
 
+func (s *supervisor)StartPodManager() {
+	go s.podManager.SpawnPod("default")
+}
 
 // func serviceListFunc(c *k8s_client.Client, ns string) func(k8s_api.ListOptions) (runtime.Object, error) {
 // 	return func(opts k8s_api.ListOptions) (runtime.Object, error) {

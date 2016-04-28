@@ -40,7 +40,8 @@ func main() {
 		glog.Errorf("Failed to create service due to: %v", err)
 	}
 
-	s, err := newSupervisor(c, 5 * time.Second, k8s_api.NamespaceAll)
+	s, err := NewSupervisor(c, 5 * time.Second, k8s_api.NamespaceAll)
+	s.StartPodManager()
 	go s.podController.Run(s.stopCh)
 	for {
 		if !s.podController.HasSynced() {
@@ -52,6 +53,6 @@ func main() {
 			pod := obj.(*k8s_api.Pod)
 			glog.Infof("Get Pod: %v/%v", pod.Namespace, pod.Name)
 		}
-		time.Sleep(3 * time.Second)
+		time.Sleep(20 * time.Second)
 	}
 }
