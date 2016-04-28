@@ -34,7 +34,7 @@ func main() {
 		}
 	}()
 
-	err = watcher.Add("/tmp/foo")
+	err = watcher.Add("/tmp")
 	if err != nil {
 		log.Fatal(err)
 	}
