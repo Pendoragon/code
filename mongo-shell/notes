@@ -1,0 +1,2 @@
+# To delete a item from array
+db.getCollection('ClusterInfoCollection').update({"_id": "2b4dd34d-9715-416c-bec5-2da4d684ac78"}, {$pull: {"config.node_config": {"_id": "a90eb13e-3de8-44c9-9781-740e41da1a17"}}})
