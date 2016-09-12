@@ -1,0 +1,5 @@
+# how to display the content of a certificate
+openssl x509 -in hsjry.pem -noout -text
+
+# how to verify a certificate
+openssl verify -verbose -CAfile ca.crt server.pem
