@@ -1,0 +1,2 @@
+# how to upload files to a pod with shell magic
+tar cz . | kubectl exec -i POD -- tar xz .
