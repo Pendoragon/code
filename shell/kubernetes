@@ -1,2 +1,5 @@
 # how to upload files to a pod with shell magic
 tar cz . | kubectl exec -i POD -- tar xz .
+
+# go templates
+kubectl delete rs `kubectl get rs --namespace=xxx --template '{{range $i,$rs := .items}}{{if eq $rs.spec.replicas 0.0}}{{printf "%v\n" $rs.metadata.name}}{{end}}{{end}}' | xargs` --namespace=xxx
