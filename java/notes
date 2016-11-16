@@ -1,0 +1,2 @@
+# View JVM Xmx, Xms etc.
+java -XX:+PrintFlagsFinal -version | grep -iE 'HeapSize|PermSize|ThreadStackSize'
