@@ -3,3 +3,6 @@ db.getCollection('ClusterInfoCollection').update({"_id": "2b4dd34d-9715-416c-bec
 
 # To update an item's field in array
 db.getCollection('ClusterInfoCollection').update({"_id": "626cebb6-2e61-4096-9d47-0ccb3eedca4e"}, {$set: {"config.node_config.4.mem": 16047}})
+
+# Find element in array and update field in it
+db.ClusterInfoCollection.update({"config.node_config.instance_name":"kube-node-88"},{$set: { "config.node_config.$.instance_name" : "kube-node-57" }})
